@@ -14,11 +14,10 @@ class CategoryController extends Controller
     {
 
         if(Auth::user()->role->name == 'admin'){
-         $categories = Category::paginate(3);
-     }else if(Auth::user()->role->name == 'seller'){
+           $categories = Category::paginate(3);
+       }else if(Auth::user()->role->name == 'seller'){
         $categories = Category::where('created_by', Auth::id())->paginate(3);
     }
-
     return view(Auth::user()->role->name.'.categories.index', compact('categories'));
 }
     /**
@@ -29,7 +28,7 @@ class CategoryController extends Controller
     public function trash()
     {
         $categories = Category::onlyTrashed()->paginate(3);
-        return view('admin.categories.index', compact('categories'));
+        return view(Auth::user()->role->name.'.categories.index', compact('categories'));
     }
 
 
@@ -61,7 +60,12 @@ class CategoryController extends Controller
             'title'=>'required|min:5',
             'slug'=>'required|min:5|unique:categories'
         ]);
-        $categories = Category::create($request->only('title','description','slug', 'created_by'));
+        $categories = Category::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'slug' => $request->slug,
+            'created_by' => Auth::id()            
+        ]);
         $categories->parents()->attach($request->parent_id,['created_at'=>now(), 'updated_at'=>now()]);
         return back()->with('message','Category Added Successfully!');
     }
@@ -85,9 +89,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-     $categories = Category::where('id','!=', $category->id)->get();
-     return view('admin.categories.create',['categories' => $categories, 'category'=>$category]);
- }
+       $categories = Category::where('id','!=', $category->id)->get();
+       return view(Auth::user()->role->name.'.categories.create',['categories' => $categories, 'category'=>$category]);
+   }
 
     /**
      * Update the specified resource in storage.

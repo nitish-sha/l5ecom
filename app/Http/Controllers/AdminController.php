@@ -11,6 +11,7 @@ class AdminController extends Controller
 	}
 
 	public function dashboard(){
+		//dd(Auth::user()->role->name);
 		return view(Auth::user()->role->name.'.dashboard');
 	}
 }

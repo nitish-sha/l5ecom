@@ -15,8 +15,11 @@ class UpdateProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
            $table->boolean('featured')->default(0)->after('options');
-           $table->boolean('status')->default(0)->after('featured');
-        });
+           $table->unsignedInteger('created_by')->after('featured')->default(0);
+           $table->boolean('status')->default(0)->after('created_by');
+
+
+       });
     }
 
     /**
@@ -28,6 +31,7 @@ class UpdateProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('featured');
+            $table->dropColumn('created_by');
             $table->dropColumn('status');
         });
     }

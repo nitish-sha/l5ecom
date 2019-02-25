@@ -1,18 +1,18 @@
 @extends('seller.app')
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('seller.dashboard')}}">Dashboard</a></li>
- <li class="breadcrumb-item active" aria-current="page">Products</li>
+<li class="breadcrumb-item active" aria-current="page">Products</li>
 @endsection
 @section('content')
-  <div class="row d-block">
-    <div class="col-sm-12">
-      @if (session()->has('message'))
-      <div class="alert alert-success">
-        {{session('message')}}
-      </div>
-      @endif
+<div class="row d-block">
+  <div class="col-sm-12">
+    @if (session()->has('message'))
+    <div class="alert alert-success">
+      {{session('message')}}
     </div>
+    @endif
   </div>
+</div>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h2 class="h2">Products List</h2>
 
@@ -55,24 +55,24 @@
           @endif
         </td>
         <td>${{$product->price}}</td>
-        <td><img src="{{asset('storage/'.$product->thumbnail)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
+        <td><img src="{{asset($product->thumbnail)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
         @if($product->trashed())
-         <td>{{$product->deleted_at}}</td>
-         <td><a class="btn btn-info btn-sm" href="{{route('seller.product.recover',$product->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
+        <td>{{$product->deleted_at}}</td>
+        <td><a class="btn btn-info btn-sm" href="{{route('seller.product.recover',$product->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
           <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
-          
-          @method('DELETE')
-          @csrf
-                                    </form>
+
+            @method('DELETE')
+            @csrf
+          </form>
         </td>
         @else
         <td>{{$product->created_at}}</td>
         <td><a class="btn btn-info btn-sm" href="{{route('seller.product.edit',$product->slug)}}">Edit</a> | <a id="trash-product-{{$product->id}}" class="btn btn-warning btn-sm" href="{{route('seller.product.remove',$product->slug)}}">Trash</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
           <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
-          
-          @method('DELETE')
-          @csrf
-                                    </form>
+
+            @method('DELETE')
+            @csrf
+          </form>
         </td>
         @endif
       </tr>

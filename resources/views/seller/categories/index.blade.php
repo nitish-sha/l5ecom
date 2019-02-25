@@ -31,6 +31,7 @@
         <th>Slug</th>
         <th>Childrens</th>
         <th>Date Created</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -51,50 +52,51 @@
           <strong>{{"Parent Category"}}</strong>
           @endif
         </td>
+        <td><span class="badge @if($category->status == 'Pending') badge-warning @else badge-success @endif">{{$category->status}}</span></td>
         @if($category->trashed())
         <td>{{$category->deleted_at}}</td>
         <td><a class="btn btn-info btn-sm" href="{{route('seller.category.recover',$category->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$category->id}}')">Delete</a>
           <form id="delete-category-{{$category->id}}" action="{{ route('seller.category.destroy', $category->slug) }}" method="POST" style="display: none;">
-          
-          @method('DELETE')
-          @csrf
-        </form>
-      </td>
-      @else
-      <td>{{$category->created_at}}</td>
-      <td><a class="btn btn-info btn-sm" href="{{route('seller.category.edit',$category->slug)}}">Edit</a> | <a id="trash-category-{{$category->id}}" class="btn btn-warning btn-sm" href="{{route('seller.category.remove',$category->slug)}}">Trash</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$category->id}}')">Delete</a>
-        <form id="delete-category-{{$category->id}}" action="{{ route('seller.category.destroy', $category->slug) }}" method="POST" style="display: none;">
-        
-        @method('DELETE')
-        @csrf
-      </form>
-    </td>
-    @endif
-  </tr>
-  @endforeach
-  @else
-  <tr>
-    <td colspan="7" class="alert alert-info">No Categories Found..</td>
-  </tr>
-  @endif
-  
-</tbody>
 
-</table>
+            @method('DELETE')
+            @csrf
+          </form>
+        </td>
+        @else
+        <td>{{$category->created_at}}</td>
+        <td><a class="btn btn-info btn-sm" href="{{route('seller.category.edit',$category->slug)}}">Edit</a> | <a id="trash-category-{{$category->id}}" class="btn btn-warning btn-sm" href="{{route('seller.category.remove',$category->slug)}}">Trash</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$category->id}}')">Delete</a>
+          <form id="delete-category-{{$category->id}}" action="{{ route('seller.category.destroy', $category->slug) }}" method="POST" style="display: none;">
+
+            @method('DELETE')
+            @csrf
+          </form>
+        </td>
+        @endif
+      </tr>
+      @endforeach
+      @else
+      <tr>
+        <td colspan="7" class="alert alert-info">No Categories Found..</td>
+      </tr>
+      @endif
+
+    </tbody>
+
+  </table>
 </div>
 <div class="row">
-<div class="col-md-12">
-{{$categories->links()}}
-</div>
+  <div class="col-md-12">
+    {{$categories->links()}}
+  </div>
 </div>
 @endsection
 @section('scripts')
 <script type="text/javascript">
-function confirmDelete(id){
-let choice = confirm("Are You sure, You want to Delete this record ?")
-if(choice){
-document.getElementById('delete-category-'+id).submit();
-}
-}
+  function confirmDelete(id){
+    let choice = confirm("Are You sure, You want to Delete this record ?")
+    if(choice){
+      document.getElementById('delete-category-'+id).submit();
+    }
+  }
 </script>
 @endsection

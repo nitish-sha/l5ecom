@@ -15,7 +15,8 @@ class UpdateCategoriesTable extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             $table->string('slug')->after('description')->nullable();
-            $table->string('created_by')->after('slug')->nullable();
+            $table->unsignedInteger('created_by')->after('slug')->default(0);
+            $table->string('status', 8)->after('created_by')->default('Pending');
             
         });
     }
@@ -30,6 +31,7 @@ class UpdateCategoriesTable extends Migration
         Schema::table('categories', function (Blueprint $table) {
             $table->dropColumn('slug');
             $table->dropColumn('created_by');
+            $table->dropColumn('status');
         });
     }
 }
