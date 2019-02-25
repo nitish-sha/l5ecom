@@ -33,6 +33,7 @@
         <th>Categories</th>
         <th>Price</th>
         <th>Thumbnail</th>
+        <th>Status</th>
         <th>Date Created</th>
         <th>Actions</th>
       </tr>
@@ -55,37 +56,52 @@
           @endif
         </td>
         <td>${{$product->price}}</td>
-        <td><img src="{{asset($product->thumbnail)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
-        @if($product->trashed())
-        <td>{{$product->deleted_at}}</td>
-        <td><a class="btn btn-info btn-sm" href="{{route('seller.product.recover',$product->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
-          <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
 
-            @method('DELETE')
-            @csrf
-          </form>
-        </td>
-        @else
-        <td>{{$product->created_at}}</td>
-        <td><a class="btn btn-info btn-sm" href="{{route('seller.product.edit',$product->slug)}}">Edit</a> | <a id="trash-product-{{$product->id}}" class="btn btn-warning btn-sm" href="{{route('seller.product.remove',$product->slug)}}">Trash</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
-          <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
 
-            @method('DELETE')
-            @csrf
-          </form>
-        </td>
-        @endif
-      </tr>
-      @endforeach
-      @else
-      <tr>
-        <td colspan="7" class="alert alert-info">No products Found..</td>
-      </tr>
-      @endif
-      
-    </tbody>
-    
-  </table>
+
+        <td><img src="{{asset('storage/'.$product->thumbnail)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
+        @php
+        if($product->status == 0){
+        $css = 'badge-warning';
+        $text = 'Pending';
+      }else{
+      $css = 'badge-success';
+      $text = 'Published';
+    }
+    @endphp
+    <td><span class="badge {{ $css }}">{{ $text }}</span></td>
+
+    @if($product->trashed())
+    <td>{{$product->deleted_at}}</td>
+
+    <td><a class="btn btn-info btn-sm" href="{{route('seller.product.recover',$product->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
+      <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
+
+        @method('DELETE')
+        @csrf
+      </form>
+    </td>
+    @else
+    <td>{{$product->created_at}}</td>
+    <td><a class="btn btn-info btn-sm" href="{{route('seller.product.edit',$product->slug)}}">Edit</a> | <a id="trash-product-{{$product->id}}" class="btn btn-warning btn-sm" href="{{route('seller.product.remove',$product->slug)}}">Trash</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
+      <form id="delete-product-{{$product->id}}" action="{{ route('seller.product.destroy', $product->slug) }}" method="POST" style="display: none;">
+
+        @method('DELETE')
+        @csrf
+      </form>
+    </td>
+    @endif
+  </tr>
+  @endforeach
+  @else
+  <tr>
+    <td colspan="7" class="alert alert-info">No products Found..</td>
+  </tr>
+  @endif
+
+</tbody>
+
+</table>
 </div>
 <div class="row">
   <div class="col-md-12">

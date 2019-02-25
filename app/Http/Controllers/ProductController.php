@@ -18,35 +18,35 @@ class ProductController extends Controller
   public function index()
   {
     if(Auth::user()->role->name == 'admin'){
-     $products = Product::with('categories')->paginate(3);
-   }else if(Auth::user()->role->name == 'seller'){
-    $products = Product::with('categories')->where('created_by', Auth::id())->paginate(3);
+      $products = Product::with('categories')->latest()->paginate(8);
+    }else if(Auth::user()->role->name == 'seller'){
+      $products = Product::with('categories')->where('created_by', Auth::id())->latest()->paginate(8);
+    }
+    return view(Auth::user()->role->name.'.products.index', compact('products'));
   }
-  return view(Auth::user()->role->name.'.products.index', compact('products'));
-}
 
-public function trash()
-{
-  $products = Product::with('categories')->onlyTrashed()->paginate(3);
-  return view(Auth::user()->role->name.'.products.index', compact('products'));
-}
+  public function trash()
+  {
+    $products = Product::with('categories')->onlyTrashed()->paginate(3);
+    return view(Auth::user()->role->name.'.products.index', compact('products'));
+  }
 
-public function create()
-{
-  $categories = Category::with('childrens')->get();
-  return view(Auth::user()->role->name.'.products.create', compact('categories'));
-}
+  public function create()
+  {
+    $categories = Category::with('childrens')->get();
+    return view(Auth::user()->role->name.'.products.create', compact('categories'));
+  }
 
-public function show()
-{
+  public function show()
+  {
        //dd(Session::get('cart'));
- $categories = Category::with('childrens')->get();
- $products = Product::with('categories')->paginate(3);
- return view('products.all', compact('categories','products'));
-}
+   $categories = Category::with('childrens')->get();
+   $products = Product::with('categories')->paginate(3);
+   return view('products.all', compact('categories','products'));
+ }
 
 
-public function single(Product $product){
+ public function single(Product $product){
   return view('products.single', compact('product'));
 }
 
@@ -93,22 +93,27 @@ public function store(StoreProduct $request)
    $extension = ".".$request->thumbnail->getClientOriginalExtension();
    $name = basename($request->thumbnail->getClientOriginalName(), $extension).time();
    $name = $name.$extension;
-   $path = $request->thumbnail->storeAs('images', $name);
+   $path = $request->thumbnail->storeAs('images', $name, 'public');
  }
- $product = Product::create([
-   'title'=>$request->title,
-   'slug' => $request->slug,
-   'description'=>$request->description,
-   'thumbnail' => $path,
-   'created_by' => Auth::id(),
-   'status' => $request->status,
-   'options' => isset($request->extras) ? json_encode($request->extras) : null,
-   'featured' => ($request->featured) ? $request->featured : 0,
-   'price' => $request->price,
-   'discount'=>$request->discount ? $request->discount : 0,
-   'discount_price' => ($request->discount_price) ? $request->discount_price : 0,
- ]);
- if($product){
+ $status = 0;
+ if(Auth::user()->role->name == 'admin'){
+  $status = 1;
+}
+
+$product = Product::create([
+ 'title'=>$request->title,
+ 'slug' => $request->slug,
+ 'description'=>$request->description,
+ 'thumbnail' => $path,
+ 'created_by' => Auth::id(),
+ 'status' => $status,
+ 'options' => isset($request->extras) ? json_encode($request->extras) : null,
+ 'featured' => ($request->featured) ? $request->featured : 0,
+ 'price' => $request->price,
+ 'discount'=>$request->discount ? $request->discount : 0,
+ 'discount_price' => ($request->discount_price) ? $request->discount_price : 0,
+]);
+if($product){
   $product->categories()->attach($request->category_id,['created_at'=>now(), 'updated_at'=>now()]);
   return redirect(route(Auth::user()->role->name.'.product.index'))->with('message', 'Product Successfully Added');
 }else{

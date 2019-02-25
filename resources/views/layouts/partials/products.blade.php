@@ -1,9 +1,9 @@
 <div class="album py-5 bg-light">
   <div class="container">
     <div class="row">
-      @foreach($products as $product)
-      <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
+      @forelse(App\Product::where('status', 1)->get() as $product)
+      <div class="col-md-3">
+        <div class="card mb-3 shadow-sm">
           <img class="card-img-top img-thumbnail" src="{{ asset('storage/'. $product->thumbnail)}}">
           <div class="card-body">
             <h4 class="card-title">{{ $product->title }}</h4>
@@ -18,12 +18,18 @@
           </div>
         </div>
       </div>
-      @endforeach
-    </div>
-      <div class="row">
-        <div class="col-md-12">
-          {{ $products->links() }}
+      @empty
+      <div class="col-md-12">
+        <div class="card mb-12 shadow-sm text-center">
+          No Category Found
         </div>
       </div>
+      @endforelse
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{ $products->links() }}
+      </div>
+    </div>
   </div>
 </div>

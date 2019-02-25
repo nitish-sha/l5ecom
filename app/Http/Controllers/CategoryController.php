@@ -14,8 +14,8 @@ class CategoryController extends Controller
     {
 
         if(Auth::user()->role->name == 'admin'){
-           $categories = Category::paginate(3);
-       }else if(Auth::user()->role->name == 'seller'){
+         $categories = Category::paginate(3);
+     }else if(Auth::user()->role->name == 'seller'){
         $categories = Category::where('created_by', Auth::id())->paginate(3);
     }
     return view(Auth::user()->role->name.'.categories.index', compact('categories'));
@@ -57,8 +57,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'=>'required|min:5',
-            'slug'=>'required|min:5|unique:categories'
+            'title'=>'required|min:3',
+            'slug'=>'required|min:3|unique:categories'
         ]);
         $categories = Category::create([
             'title' => $request->title,
@@ -89,9 +89,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-       $categories = Category::where('id','!=', $category->id)->get();
-       return view(Auth::user()->role->name.'.categories.create',['categories' => $categories, 'category'=>$category]);
-   }
+     $categories = Category::where('id','!=', $category->id)->get();
+     return view(Auth::user()->role->name.'.categories.create',['categories' => $categories, 'category'=>$category]);
+ }
 
     /**
      * Update the specified resource in storage.
