@@ -15,6 +15,7 @@ Route::get('/', function () {
 	return view('welcome');
 });
 Route::resource('checkout', 'OrderController');
+//Auth::routes(['verify' => true]);
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -32,52 +33,54 @@ Route::group(['as' => 'cart.', 'prefix' => 'cart'], function () {
 });
 
 Route::group(['as' => 'admin.', 'middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
-	Route::get('/', 'AdminController@dashboard');
+	Route::get('/', 'DashboardController@dashboard');
+	Route::get('dashboard', 'DashboardController@dashboard')->name('dashboard');
+
+	Route::resource('category', 'CategoryController');
 	Route::get('category/{category}/remove', 'CategoryController@remove')->name('category.remove');
 	Route::get('category/trash', 'CategoryController@trash')->name('category.trash');
 	Route::get('category/recover/{id}', 'CategoryController@recoverCat')->name('category.recover');
+
+	Route::resource('product', 'ProductController');
 	Route::get('product/{product}/remove', 'ProductController@remove')->name('product.remove');
 	Route::get('product/trash', 'ProductController@trash')->name('product.trash');
 	Route::get('product/recover/{id}', 'ProductController@recoverProduct')->name('product.recover');
-
 	Route::view('product/extras', 'admin.partials.extras')->name('product.extras');
 
+
+
+	Route::resource('profile', 'ProfileController');
 	Route::get('profile/{profile}/remove', 'ProfileController@remove')->name('profile.remove');
 	Route::get('profile/trash', 'ProfileController@trash')->name('profile.trash');
 	Route::get('profile/recover/{id}', 'ProfileController@recoverProduct')->name('profile.recover');
 	Route::view('profile/roles', 'admin.partials.extras')->name('profile.extras');
-
 	Route::get('profile/states/{id?}', 'ProfileController@getStates')->name('profile.states');
 	Route::get('profile/cities/{id?}', 'ProfileController@getCities')->name('profile.cities');
 
-	Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
-	Route::resource('product', 'ProductController');
-	Route::resource('category', 'CategoryController');
-	Route::resource('profile', 'ProfileController');
+	
+
+	
 });
 
 
 Route::group(['as' => 'seller.', 'middleware' => ['auth', 'seller'], 'prefix' => 'seller'], function () {
-	Route::get('/', 'AdminController@dashboard');
+	Route::get('/', 'DashboardController@dashboard');
+	Route::get('dashboard', 'DashboardController@dashboard')->name('dashboard');
+
+	Route::resource('category', 'CategoryController');
 	Route::get('category/{category}/remove', 'CategoryController@remove')->name('category.remove');
 	Route::get('category/trash', 'CategoryController@trash')->name('category.trash');
 	Route::get('category/recover/{id}', 'CategoryController@recoverCat')->name('category.recover');
+
+
+	Route::resource('product', 'ProductController');
 	Route::get('product/{product}/remove', 'ProductController@remove')->name('product.remove');
 	Route::get('product/trash', 'ProductController@trash')->name('product.trash');
 	Route::get('product/recover/{id}', 'ProductController@recoverProduct')->name('product.recover');
+	Route::view('product/extras', 'seller.partials.extras')->name('product.extras');
 
-	Route::view('product/extras', 'admin.partials.extras')->name('product.extras');
-
-	Route::get('profile/{profile}/remove', 'ProfileController@remove')->name('profile.remove');
-	Route::get('profile/trash', 'ProfileController@trash')->name('profile.trash');
-	Route::get('profile/recover/{id}', 'ProfileController@recoverProduct')->name('profile.recover');
-	Route::view('profile/roles', 'admin.partials.extras')->name('profile.extras');
-
-	Route::get('profile/states/{id?}', 'ProfileController@getStates')->name('profile.states');
-	Route::get('profile/cities/{id?}', 'ProfileController@getCities')->name('profile.cities');
-
-	Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
-	Route::resource('product', 'ProductController');
-	Route::resource('category', 'CategoryController');
 	Route::resource('profile', 'ProfileController');
+	
+
 });
+

@@ -41,7 +41,7 @@ class ProductController extends Controller
   {
        //dd(Session::get('cart'));
    $categories = Category::with('childrens')->get();
-   $products = Product::with('categories')->paginate(3);
+   $products = Product::with('categories')->paginate(10);
    return view('products.all', compact('categories','products'));
  }
 
