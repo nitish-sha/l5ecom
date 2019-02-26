@@ -12,11 +12,16 @@
  */
 
 Route::get('/', function () {
+	//dd(Session::get('last_activity'));
 	return view('welcome');
 });
 Route::resource('checkout', 'OrderController');
 //Auth::routes(['verify' => true]);
 Auth::routes();
+
+Route::get('lockscreen', 'LockAccountController@lockscreen');
+Route::post('lockscreen', 'LockAccountController@unlock')->name('lockscreen');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -32,7 +37,7 @@ Route::group(['as' => 'cart.', 'prefix' => 'cart'], function () {
 	Route::post('/update/{product}', 'ProductController@updateProduct')->name('update');
 });
 
-Route::group(['as' => 'admin.', 'middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
+Route::group(['as' => 'admin.', 'middleware' => [ 'auth', 'admin'], 'prefix' => 'admin'], function () {
 	Route::get('/', 'DashboardController@dashboard');
 	Route::get('dashboard', 'DashboardController@dashboard')->name('dashboard');
 

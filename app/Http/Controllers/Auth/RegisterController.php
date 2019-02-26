@@ -22,7 +22,7 @@ class RegisterController extends Controller {
 		    |
 	*/
 
-	use RegistersUsers;
+		    use RegistersUsers;
 
 	/**
 	 * Where to redirect users after registration.
@@ -49,6 +49,8 @@ class RegisterController extends Controller {
 	protected function validator(array $data) {
 		return Validator::make($data, [
 			'email' => 'required|string|email|max:255|unique:users',
+			'mobile' => 'required|unique:users,mobile,'.$data['mobile'].',mobile',
+			//'mobile' => 'sometime|required|unique:users',
 			'password' => 'required|string|min:6|confirmed',
 		]);
 	}
@@ -60,9 +62,12 @@ class RegisterController extends Controller {
 	 * @return \App\User
 	 */
 	protected function create(array $data) {
+		//die($data['userRole']);
 		return User::create([
 			'email' => $data['email'],
+			'mobile' => $data['mobile'],
 			'password' => Hash::make($data['password']),
+			'role_id' => $data['role_id']
 		]);
 	}
 	protected function registered(Request $request, $user) {

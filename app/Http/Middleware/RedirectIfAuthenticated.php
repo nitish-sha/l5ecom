@@ -17,12 +17,19 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
+     
+
+
         if (Auth::guard($guard)->check()) {
             if(Auth::user()->role->name != 'customer'){
                 return redirect(Auth::user()->role->name.'/dashboard');
             }
             return redirect('/');
         }
+
+
+
 
         return $next($request);
     }

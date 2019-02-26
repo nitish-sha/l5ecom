@@ -76,12 +76,12 @@
             </div> -->
             <div class="container-fluid">
                 <div class="row py-2">
-                    <div class="col-md-3">
+                <!--     <div class="col-md-3">
                      @section('sidebar')
                      @include('layouts.partials.sidebar')
                      @show
-                 </div>
-                 <div class="col-md-9">
+                 </div> -->
+                 <div class="col-md-12">
                     @if(session()->has('message'))
                     <p class="alert alert-success">
                         {{ session()->get('message') }}

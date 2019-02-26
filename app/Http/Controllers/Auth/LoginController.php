@@ -51,5 +51,13 @@ class LoginController extends Controller
         else if($user->role->name == 'seller')
             $this->redirectTo = '/seller/dashboard';
     }
+
+    protected function credentials(Request $request)
+    {
+        if(is_numeric($request->get('email'))){
+            return ['mobile'=>$request->get('email'),'password'=>$request->get('password')];
+        }
+        return $request->only($this->username(), 'password');
+    }
     
 }

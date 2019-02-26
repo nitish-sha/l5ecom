@@ -38,6 +38,7 @@ class Users extends Seeder
         	'email' => 'admin@domain.com',
         	'password' => bcrypt('secret'),
         	'role_id' => $role1->id,
+            'mobile' => mt_rand(9876543211, 9876543211),
         ]);
         Profile::create([
         	'user_id' => $user1->id
@@ -49,6 +50,7 @@ class Users extends Seeder
             'email' => 'seller@domain.com',
             'password' => bcrypt('secret'),
             'role_id' => $role2->id,
+            'mobile' => mt_rand(9876543212, 9876543212),
         ]);
         Profile::create([
             'user_id' => $user2->id
@@ -60,6 +62,7 @@ class Users extends Seeder
             'email' => 'employee@domain.com',
             'password' => bcrypt('secret'),
             'role_id' => $role3->id,
+            'mobile' => mt_rand(9876543213, 9876543213),
         ]);
         Profile::create([
             'user_id' => $user3->id
@@ -71,6 +74,7 @@ class Users extends Seeder
             'email' => 'customer@domain.com',
             'password' => bcrypt('secret'),
             'role_id' => $role4->id,
+            'mobile' => mt_rand(9876543214, 9876543214),
         ]);
         Profile::create([
             'user_id' => $user4->id
